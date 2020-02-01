@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">MyWallet</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="no_account_yet_create_one">No account yet? <u>Create one</u></string>
+    <string name="already_registered_login_me">Already registered. <u>Login me!</u></string>
+    <string name="sign_in">Sign In</string>
+    <string name="register">Register</string>
+</resources>
