@@ -14,4 +14,3 @@
 .externalNativeBuild
 .cxx
 /app/*.json
-build
