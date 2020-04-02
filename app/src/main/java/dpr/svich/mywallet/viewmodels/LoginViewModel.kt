@@ -30,7 +30,6 @@ class LoginViewModel : ViewModel() {
             email.isEmpty() -> status.value = Status.LOGIN_INVALID
             password.length < 6 -> status.value = Status.PASWD_INVALID
             else -> {
-                //TODO Firebase Auth
                 FirebaseAuth.getInstance().signInWithEmailAndPassword(email,password)?.addOnCompleteListener{task ->
                     if(task.isSuccessful){
                         status.value = Status.SUCCESS

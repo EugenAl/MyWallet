@@ -6,4 +6,6 @@
 
     <color name="colorSecondary">#373740</color>
     <color name="colorWhite">#fff</color>
+    <color name="colorTeal">#00695C</color>
+    <color name="colorDeepOrange">#D84315</color>
 </resources>

@@ -6,14 +6,9 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.textfield.TextInputLayout
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import dpr.svich.mywallet.MainActivity
 import dpr.svich.mywallet.R
 import dpr.svich.mywallet.enums.Status
 import dpr.svich.mywallet.viewmodels.LoginViewModel
