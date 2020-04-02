@@ -8,17 +8,22 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import dpr.svich.mywallet.model.Transaction
 import java.sql.Timestamp
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 class AddViewModel : ViewModel() {
 
     private var database : DatabaseReference = Firebase.database.reference
 
-    val userId = FirebaseAuth.getInstance().currentUser?.uid
+    private val userId = FirebaseAuth.getInstance().currentUser?.uid
 
     fun addTransaction(comment: String, price: String){
-        var transaction = Transaction(comment, price, Timestamp(System.currentTimeMillis()))
+        val transaction = Transaction(comment, price, Timestamp(System.currentTimeMillis()))
         // write to db
-        database.child(userId.orEmpty()).child("Transactions").push().setValue(transaction)
+        database.child(userId.orEmpty()).child("Transactions")
+            .child(SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(Date()))
+            .push().setValue(transaction)
             .addOnSuccessListener{
                 Log.d("transaction", "transaction successful")
             }
