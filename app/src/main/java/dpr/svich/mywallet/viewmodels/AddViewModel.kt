@@ -19,7 +19,7 @@ class AddViewModel : ViewModel() {
     private val userId = FirebaseAuth.getInstance().currentUser?.uid
 
     fun addTransaction(comment: String, price: String){
-        val transaction = Transaction(comment, price, Timestamp(System.currentTimeMillis()))
+        val transaction = Transaction(comment, price, System.currentTimeMillis())
         // write to db
         database.child(userId.orEmpty()).child("Transactions")
             .child(SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(Date()))
