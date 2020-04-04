@@ -31,35 +31,54 @@ class AddFragment : Fragment() {
 
         // init views
         val categorySpinner = view.findViewById<Spinner>(R.id.spinner)
-        val commentEditText = view.findViewById<EditText>(R.id.productEditText)
-        val priceEditText = view.findViewById<EditText>(R.id.priceEditText)
-        val spendRadioButton = view.findViewById<RadioButton>(R.id.radioButtonSpend).also {
-            it.setOnCheckedChangeListener{ v, state ->
-                when(state){
-                    true -> {if(categorySpinner != null){
-                        val arrayAdapter = ArrayAdapter(activity!!.applicationContext, R.layout.spinner_item, categoriesSpend)
-                        arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
-                        categorySpinner.adapter = arrayAdapter
-                    }}
-                    false -> {if(categorySpinner != null){
-                        val arrayAdapter = ArrayAdapter(activity!!.applicationContext, R.layout.spinner_item, categoriesEarn)
-                        arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
-                        categorySpinner.adapter = arrayAdapter
-                    }}
+        if(categorySpinner != null) {
+            val arrayAdapter =
+                ArrayAdapter(activity!!.applicationContext, R.layout.spinner_item, categoriesSpend)
+            arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
+            categorySpinner.adapter = arrayAdapter
+            val commentEditText = view.findViewById<EditText>(R.id.productEditText)
+            val priceEditText = view.findViewById<EditText>(R.id.priceEditText)
+            val spendRadioButton = view.findViewById<RadioButton>(R.id.radioButtonSpend).also {
+                it.setOnCheckedChangeListener { v, state ->
+                    when (state) {
+                        true -> {
+                            if (categorySpinner != null) {
+                                val arrayAdapter = ArrayAdapter(
+                                    activity!!.applicationContext,
+                                    R.layout.spinner_item,
+                                    categoriesSpend
+                                )
+                                arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
+                                categorySpinner.adapter = arrayAdapter
+                            }
+                        }
+                        false -> {
+                            if (categorySpinner != null) {
+                                val arrayAdapter = ArrayAdapter(
+                                    activity!!.applicationContext,
+                                    R.layout.spinner_item,
+                                    categoriesEarn
+                                )
+                                arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
+                                categorySpinner.adapter = arrayAdapter
+                            }
+                        }
+                    }
+                }
+            }
+            view.findViewById<Button>(R.id.addButton).also {
+                it.setOnClickListener {
+                    if (priceEditText.text.isNotEmpty()) {
+                        viewModel.addTransaction(
+                            commentEditText.text.toString(),
+                            priceEditText.text.toString(), spendRadioButton.isChecked
+                        )
+                        commentEditText.text.clear()
+                        priceEditText.text.clear()
+                    }
                 }
             }
         }
-        view.findViewById<Button>(R.id.addButton).also {
-            it.setOnClickListener{
-                if(priceEditText.text.isNotEmpty()){
-                    viewModel.addTransaction(commentEditText.text.toString(),
-                        priceEditText.text.toString(), spendRadioButton.isChecked)
-                    commentEditText.text.clear()
-                    priceEditText.text.clear()
-                }
-            }
-        }
-
         return view
     }
 

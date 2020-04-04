@@ -93,8 +93,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:textColor="@color/colorWhite"
+        android:hint="\u20BD"
         android:inputType="numberDecimal"
+        android:textColor="@color/colorWhite"
+        android:textColorHint="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/productEditText"
         app:layout_constraintTop_toBottomOf="@+id/spinner" />
