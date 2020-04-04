@@ -6,4 +6,21 @@
     <string name="already_registered_login_me">Already registered. <u>Login me!</u></string>
     <string name="sign_in">Sign In</string>
     <string name="register">Register</string>
+    <array name="spend_categories">
+        <item>Transport</item>
+        <item>Fuel</item>
+        <item>Candies</item>
+        <item>Products</item>
+        <item>Entertainment</item>
+        <item>Wear</item>
+        <item>Medicine</item>
+        <item>Other</item>
+    </array>
+    <array name="earn_categories">
+        <item>Lab works</item>
+        <item>Help</item>
+        <item>Scholarship</item>
+        <item>Benefit</item>
+        <item>Other</item>
+    </array>
 </resources>

@@ -62,7 +62,11 @@ class MainActivity : AppCompatActivity() {
                     Log.d("DataSnapshot", "${post.key}")
                     var trans = post.getValue(Transaction::class.java)
                     trans.let {
-                        sym += trans!!.price!!.toInt()
+                        if(trans!!.isSpend!!) {
+                            sym += trans.price!!.toInt()
+                        } else {
+                            sym -= trans.price!!.toInt()
+                        }
                     }
                 }
                 symTextView.text = "${sym}\u20BD"
