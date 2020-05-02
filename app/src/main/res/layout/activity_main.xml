@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary">
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/motion_base"
         android:layout_width="match_parent"
@@ -31,7 +32,7 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/revenueCardView"
             android:layout_width="0dp"
-            android:layout_height="180dp"
+            android:layout_height="100dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
@@ -44,7 +45,7 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/expenseCardView"
             android:layout_width="0dp"
-            android:layout_height="180dp"
+            android:layout_height="100dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
@@ -71,8 +72,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/transaction_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/switch1" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
     <LinearLayout
         android:id="@+id/holderLayout"

@@ -4,8 +4,14 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Adapter
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -15,13 +21,19 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import dpr.svich.mywallet.R
+import dpr.svich.mywallet.adapter.TransactionListAdapter
 import dpr.svich.mywallet.model.Transaction
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var sheetBehavior: BottomSheetBehavior<LinearLayout>
+
+    private lateinit var listDataset: MutableLiveData<ArrayList<Transaction>>
+
+    val array = emptyArray<Transaction>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +48,7 @@ class MainActivity : AppCompatActivity() {
         sheetBehavior.isHideable = false
         sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
-        val lanyard = findViewById<LinearLayout>(R.id.linearLayout).also {
+        findViewById<LinearLayout>(R.id.linearLayout).also {
             it.setOnClickListener{
                 if (sheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
                     sheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
@@ -45,7 +57,19 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-        var sym = 0
+        listDataset = MutableLiveData()
+
+        // Recycler view list of transition
+        val recycleTransactionView = findViewById<RecyclerView>(R.id.transaction_list)
+        val recycleLayoutManager = LinearLayoutManager(applicationContext)
+        recycleTransactionView.layoutManager = recycleLayoutManager
+        val adapter = TransactionListAdapter(applicationContext)
+//        val array = arrayOf<Transaction>(Transaction("На хлебушек", "300", System.currentTimeMillis(), false, 1),
+//            Transaction("Сотка на бензин в моем кармане", "100", System.currentTimeMillis(), true, 3))
+//        adapter.setData(array)
+        recycleTransactionView.adapter = adapter
+
+        var sym: Int
         val symTextView = findViewById<TextView>(R.id.priceTV)
         val userId = FirebaseAuth.getInstance().currentUser?.uid
         val database = Firebase.database.reference.child(userId.orEmpty()).child("Transactions")
@@ -56,6 +80,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onDataChange(p0: DataSnapshot) {
+                val dataArray = ArrayList<Transaction>()
                 sym = 0
                 Log.d("DataSnapshot", "Root: ${p0.key}")
                 for(post in p0.children){
@@ -67,10 +92,20 @@ class MainActivity : AppCompatActivity() {
                         } else {
                             sym -= trans.price!!.toInt()
                         }
+
+                        dataArray.add(trans)
                     }
                 }
                 symTextView.text = "${sym}\u20BD"
+
+                listDataset.value = dataArray
             }
+        })
+
+
+        listDataset.observe(this, androidx.lifecycle.Observer {
+            adapter.setData(it)
+            Toast.makeText(applicationContext, "obser", Toast.LENGTH_SHORT).show()
         })
     }
 

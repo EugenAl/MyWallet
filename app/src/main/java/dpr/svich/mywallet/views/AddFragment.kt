@@ -42,26 +42,22 @@ class AddFragment : Fragment() {
                 it.setOnCheckedChangeListener { v, state ->
                     when (state) {
                         true -> {
-                            if (categorySpinner != null) {
-                                val arrayAdapter = ArrayAdapter(
-                                    activity!!.applicationContext,
-                                    R.layout.spinner_item,
-                                    categoriesSpend
-                                )
-                                arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
-                                categorySpinner.adapter = arrayAdapter
-                            }
+                            val arrayAdapter = ArrayAdapter(
+                                activity!!.applicationContext,
+                                R.layout.spinner_item,
+                                categoriesSpend
+                            )
+                            arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
+                            categorySpinner.adapter = arrayAdapter
                         }
                         false -> {
-                            if (categorySpinner != null) {
-                                val arrayAdapter = ArrayAdapter(
-                                    activity!!.applicationContext,
-                                    R.layout.spinner_item,
-                                    categoriesEarn
-                                )
-                                arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
-                                categorySpinner.adapter = arrayAdapter
-                            }
+                            val arrayAdapter = ArrayAdapter(
+                                activity!!.applicationContext,
+                                R.layout.spinner_item,
+                                categoriesEarn
+                            )
+                            arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
+                            categorySpinner.adapter = arrayAdapter
                         }
                     }
                 }
@@ -71,7 +67,8 @@ class AddFragment : Fragment() {
                     if (priceEditText.text.isNotEmpty()) {
                         viewModel.addTransaction(
                             commentEditText.text.toString(),
-                            priceEditText.text.toString(), spendRadioButton.isChecked
+                            priceEditText.text.toString(), spendRadioButton.isChecked,
+                            categorySpinner.selectedItemPosition
                         )
                         commentEditText.text.clear()
                         priceEditText.text.clear()
