@@ -14,16 +14,17 @@ import java.util.*
 
 class AddViewModel : ViewModel() {
 
-    private var database : DatabaseReference = Firebase.database.reference
-
     private val userId = FirebaseAuth.getInstance().currentUser?.uid
 
+    private var database : DatabaseReference = Firebase.database.reference.child(userId.orEmpty()).child("Transactions")
+        .child(SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(Date()))
+
     fun addTransaction(comment: String, price: String, isSpend: Boolean, category:Int){
-        val transaction = Transaction(comment, price, System.currentTimeMillis(), isSpend, category)
+        // get the key of next push
+        val key = database.push().key
+        val transaction = Transaction(key, comment, price, System.currentTimeMillis(), isSpend, category)
         // write to db
-        database.child(userId.orEmpty()).child("Transactions")
-            .child(SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(Date()))
-            .push().setValue(transaction)
+        database.push().setValue(transaction)
             .addOnSuccessListener{
                 Log.d("transaction", "transaction successful")
             }

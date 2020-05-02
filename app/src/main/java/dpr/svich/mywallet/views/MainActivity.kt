@@ -10,6 +10,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -63,12 +65,11 @@ class MainActivity : AppCompatActivity() {
         val recycleTransactionView = findViewById<RecyclerView>(R.id.transaction_list)
         val recycleLayoutManager = LinearLayoutManager(applicationContext)
         recycleTransactionView.layoutManager = recycleLayoutManager
+        recycleTransactionView.itemAnimator = DefaultItemAnimator()
         val adapter = TransactionListAdapter(applicationContext)
-//        val array = arrayOf<Transaction>(Transaction("На хлебушек", "300", System.currentTimeMillis(), false, 1),
-//            Transaction("Сотка на бензин в моем кармане", "100", System.currentTimeMillis(), true, 3))
-//        adapter.setData(array)
         recycleTransactionView.adapter = adapter
 
+        // today transaction listener
         var sym: Int
         val symTextView = findViewById<TextView>(R.id.priceTV)
         val userId = FirebaseAuth.getInstance().currentUser?.uid
@@ -105,7 +106,6 @@ class MainActivity : AppCompatActivity() {
 
         listDataset.observe(this, androidx.lifecycle.Observer {
             adapter.setData(it)
-            Toast.makeText(applicationContext, "obser", Toast.LENGTH_SHORT).show()
         })
     }
 
