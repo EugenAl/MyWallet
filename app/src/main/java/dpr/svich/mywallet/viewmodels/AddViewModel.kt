@@ -20,9 +20,7 @@ class AddViewModel : ViewModel() {
         .child(SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(Date()))
 
     fun addTransaction(comment: String, price: String, isSpend: Boolean, category:Int){
-        // get the key of next push
-        val key = database.push().key
-        val transaction = Transaction(key, comment, price, System.currentTimeMillis(), isSpend, category)
+        val transaction = Transaction(comment, price, System.currentTimeMillis(), isSpend, category)
         // write to db
         database.push().setValue(transaction)
             .addOnSuccessListener{

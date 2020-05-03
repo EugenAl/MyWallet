@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var listDataset: MutableLiveData<ArrayList<Transaction>>
 
-    val array = emptyArray<Transaction>()
+    val userId = FirebaseAuth.getInstance().currentUser?.uid
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,10 +69,28 @@ class MainActivity : AppCompatActivity() {
         val adapter = TransactionListAdapter(applicationContext)
         recycleTransactionView.adapter = adapter
 
+        val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT){
+            override fun onMove(recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                listDataset.value?.get(position)?.id?.let {
+                    Firebase.database.reference.child(userId.orEmpty()).child("Transactions")
+                        .child(SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(Date()))
+                        .child(it).removeValue()
+                }
+            }
+        }
+
+        val itemTouchHelper = ItemTouchHelper(itemTouchCallback)
+        itemTouchHelper.attachToRecyclerView(recycleTransactionView)
+
         // today transaction listener
         var sym: Int
         val symTextView = findViewById<TextView>(R.id.priceTV)
-        val userId = FirebaseAuth.getInstance().currentUser?.uid
         val database = Firebase.database.reference.child(userId.orEmpty()).child("Transactions")
             .child(SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(Date()))
         database.addValueEventListener(object : ValueEventListener{
@@ -93,7 +111,7 @@ class MainActivity : AppCompatActivity() {
                         } else {
                             sym -= trans.price!!.toInt()
                         }
-
+                        trans.id = post.key
                         dataArray.add(trans)
                     }
                 }
