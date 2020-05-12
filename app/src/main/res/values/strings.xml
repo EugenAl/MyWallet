@@ -7,6 +7,7 @@
     <string name="sign_in">Sign In</string>
     <string name="register">Register</string>
     <string name="wear">Wear</string>
+    <string name="month_spend">Spend for month: %d\u20BD</string>
     <array name="spend_categories">
         <item>Transport</item>
         <item>Fuel</item>
