@@ -57,6 +57,8 @@ class MainActivity : AppCompatActivity() {
         val user = FirebaseAuth.getInstance().currentUser
         updateUI(user)
 
+        Firebase.database.setPersistenceEnabled(true)
+
         // BarChart init
         val chartView = findViewById<BarChart>(R.id.mainChartView)
         chartView.setScaleEnabled(false)
@@ -87,7 +89,7 @@ class MainActivity : AppCompatActivity() {
         sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
         findViewById<LinearLayout>(R.id.linearLayout).also {
-            it.setOnClickListener{
+            it.setOnClickListener {
                 if (sheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
                     sheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
                 } else {
@@ -105,9 +107,11 @@ class MainActivity : AppCompatActivity() {
         val adapter = TransactionListAdapter(applicationContext)
         recycleTransactionView.adapter = adapter
 
-        val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT){
-            override fun onMove(recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+        val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder
+            ): Boolean {
                 return false
             }
 
@@ -130,7 +134,7 @@ class MainActivity : AppCompatActivity() {
         val symTextView = findViewById<TextView>(R.id.priceTV)
         val database = Firebase.database.reference.child(userId.orEmpty()).child(TRANSACTIONS)
             .child(SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(todayDate))
-        database.addValueEventListener(object : ValueEventListener{
+        database.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
 
@@ -138,11 +142,11 @@ class MainActivity : AppCompatActivity() {
                 val dataArray = ArrayList<Transaction>()
                 sym = 0
                 Log.d("DataSnapshot", "Root: ${p0.key}")
-                for(post in p0.children){
+                for (post in p0.children) {
                     Log.d("DataSnapshot", "${post.key}")
                     val trans = post.getValue(Transaction::class.java)
                     trans.let {
-                        if(trans!!.isSpend!!) {
+                        if (trans!!.isSpend!!) {
                             sym += trans.price!!.toInt()
                         } else {
                             sym -= trans.price!!.toInt()
@@ -159,7 +163,7 @@ class MainActivity : AppCompatActivity() {
         // month transaction listener
         val monthDatabase = Firebase.database.reference.child(userId.orEmpty()).child(TRANSACTIONS)
             .child(SimpleDateFormat("yyyy/MM", Locale.getDefault()).format(todayDate))
-            .addValueEventListener(object: ValueEventListener{
+            .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
 
                 }
@@ -167,19 +171,25 @@ class MainActivity : AppCompatActivity() {
                 override fun onDataChange(p0: DataSnapshot) {
                     val chartEntries = ArrayList<BarEntry>()
                     var monthSpend = 0
-                    for(snapshot in p0.children){
+                    for (snapshot in p0.children) {
                         Log.d("DataSnapshot", "Day: ${snapshot.key}")
                         chartEntries.add(BarEntry(snapshot.key!!.toFloat(), 0f))
-                        for(post in snapshot.children){
+                        for (post in snapshot.children) {
                             val price = (post.getValue(Transaction::class.java))?.price?.toInt()!!
                             chartEntries[chartEntries.lastIndex].y += price
                             monthSpend += price
                         }
                     }
-                    val avg = monthSpend/(SimpleDateFormat("dd",
-                        Locale.getDefault()).format(todayDate)).toInt()
-                    val chartSet = BarDataSet(chartEntries, SimpleDateFormat("MMM",
-                        Locale.getDefault()).format(todayDate))
+                    val avg = monthSpend / (SimpleDateFormat(
+                        "dd",
+                        Locale.getDefault()
+                    ).format(todayDate)).toInt()
+                    val chartSet = BarDataSet(
+                        chartEntries, SimpleDateFormat(
+                            "MMM",
+                            Locale.getDefault()
+                        ).format(todayDate)
+                    )
                     chartSet.color = resources.getColor(R.color.colorDeepOrange)
                     chartSet.axisDependency = YAxis.AxisDependency.LEFT
                     chartSet.valueTextColor = Color.WHITE
@@ -196,10 +206,16 @@ class MainActivity : AppCompatActivity() {
         listDataset.observe(this, androidx.lifecycle.Observer {
             adapter.setData(it)
         })
+
+        val linearLayout = findViewById<LinearLayout>(R.id.revenueCardView)
+        linearLayout.setOnClickListener {
+            val intent = Intent(this, StatisticActivity::class.java)
+            startActivity(intent)
+        }
     }
 
-    private fun updateUI(user : FirebaseUser?){
-        if(user == null) {
+    private fun updateUI(user: FirebaseUser?) {
+        if (user == null) {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }

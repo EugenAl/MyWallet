@@ -7,11 +7,11 @@
     <string name="sign_in">Sign In</string>
     <string name="register">Register</string>
     <string name="wear">Wear</string>
-    <string name="month_spend">Spend for month: %d\u20BD</string>
+    <string name="month_spend">Spend this month: %d\u20BD</string>
     <array name="spend_categories">
         <item>Transport</item>
         <item>Fuel</item>
-        <item>Candies</item>
+        <item>Sweets</item>
         <item>Products</item>
         <item>Entertainment</item>
         <item>Wear</item>
@@ -24,5 +24,19 @@
         <item>Scholarship</item>
         <item>Benefit</item>
         <item>Other</item>
+    </array>
+    <array name="moths">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
     </array>
 </resources>
