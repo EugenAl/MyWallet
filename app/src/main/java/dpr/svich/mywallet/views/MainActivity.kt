@@ -46,6 +46,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var listDataset: MutableLiveData<ArrayList<Transaction>>
 
+    private lateinit var chartView: BarChart
+
     private val TRANSACTIONS = "Transactions"
 
     val userId = FirebaseAuth.getInstance().currentUser?.uid
@@ -60,7 +62,7 @@ class MainActivity : AppCompatActivity() {
         Firebase.database.setPersistenceEnabled(true)
 
         // BarChart init
-        val chartView = findViewById<BarChart>(R.id.mainChartView)
+        chartView = findViewById(R.id.mainChartView)
         chartView.setScaleEnabled(false)
         chartView.setTouchEnabled(false)
         chartView.description = null
@@ -169,14 +171,11 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun onDataChange(p0: DataSnapshot) {
-                    val chartEntries = ArrayList<BarEntry>()
                     var monthSpend = 0
                     for (snapshot in p0.children) {
                         Log.d("DataSnapshot", "Day: ${snapshot.key}")
-                        chartEntries.add(BarEntry(snapshot.key!!.toFloat(), 0f))
                         for (post in snapshot.children) {
                             val price = (post.getValue(Transaction::class.java))?.price?.toInt()!!
-                            chartEntries[chartEntries.lastIndex].y += price
                             monthSpend += price
                         }
                     }
@@ -184,19 +183,8 @@ class MainActivity : AppCompatActivity() {
                         "dd",
                         Locale.getDefault()
                     ).format(todayDate)).toInt()
-                    val chartSet = BarDataSet(
-                        chartEntries, SimpleDateFormat(
-                            "MMM",
-                            Locale.getDefault()
-                        ).format(todayDate)
-                    )
-                    chartSet.color = resources.getColor(R.color.colorDeepOrange)
-                    chartSet.axisDependency = YAxis.AxisDependency.LEFT
-                    chartSet.valueTextColor = Color.WHITE
-                    val chartData = BarData(chartSet)
-                    chartView.data = chartData
-                    chartView.invalidate()
-                    chartView.animateY(500, Easing.EaseInBack)
+
+                    updateChart(p0, todayDate)
 
                     spendMonthTV.text = getString(R.string.month_spend, monthSpend)
                     spendAverageTV.text = "Average spend: ${avg}\u20BD"
@@ -219,6 +207,31 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    private fun updateChart(p0: DataSnapshot, todayDate: Date){
+        val chartEntries = ArrayList<BarEntry>()
+        for (snapshot in p0.children) {
+            Log.d("DataSnapshot", "Day: ${snapshot.key}")
+            chartEntries.add(BarEntry(snapshot.key!!.toFloat(), 0f))
+            for (post in snapshot.children) {
+                val price = (post.getValue(Transaction::class.java))?.price?.toInt()!!
+                chartEntries[chartEntries.lastIndex].y += price
+            }
+        }
+        val chartSet = BarDataSet(
+            chartEntries, SimpleDateFormat(
+                "MMM",
+                Locale.getDefault()
+            ).format(todayDate)
+        )
+        chartSet.color = resources.getColor(R.color.colorDeepOrange)
+        chartSet.axisDependency = YAxis.AxisDependency.LEFT
+        chartSet.valueTextColor = Color.WHITE
+        val chartData = BarData(chartSet)
+        chartView.data = chartData
+        chartView.invalidate()
+        chartView.animateY(500, Easing.EaseInBack)
     }
 
 }

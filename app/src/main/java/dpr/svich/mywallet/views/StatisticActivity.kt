@@ -9,6 +9,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.appcompat.widget.Toolbar
+import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.*
@@ -33,7 +34,7 @@ class StatisticActivity : AppCompatActivity() {
     private lateinit var toolbarSpinner: Spinner
     private lateinit var currentDate: Date
 
-    private lateinit var lineChart: LineChart
+    private lateinit var barChart: BarChart
     private lateinit var pieChart: PieChart
 
     private val TRANSACTIONS = "Transactions"
@@ -52,8 +53,8 @@ class StatisticActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayShowTitleEnabled(false)
         toolbar.setNavigationOnClickListener { finish() }
 
-        // LineChart init
-        lineChart = findViewById(R.id.lineChart)
+        // BarChart init
+        barChart = findViewById(R.id.barChart)
 
         // PieChart init
         pieChart = findViewById(R.id.pieChart)
@@ -85,43 +86,50 @@ class StatisticActivity : AppCompatActivity() {
                         }
 
                         override fun onDataChange(p0: DataSnapshot) {
-                            val pieData = ArrayList<PieEntry>()
-                            val lineData = ArrayList<Entry>()
-                            val pieCategories = floatArrayOf(0f,0f,0f,0f,0f,0f,0f, 0f)
-                            val labels = resources.getStringArray(R.array.spend_categories)
-                            var sum = 0
-                            for (snapshot in p0.children) {
-                                Log.d("DataSnapshot stat", "Day: ${snapshot.key}")
-                                for (post in snapshot.children) {
-                                    val transaction = post.getValue(Transaction::class.java)
-                                    pieCategories[transaction!!.category!!.toInt()] +=
-                                        transaction!!.price!!.toFloat()
-                                    lineData.add(Entry(snapshot.key!!.toFloat(),
-                                        transaction.price!!.toFloat()))
-                                    sum += transaction.price!!.toInt()
-                                }
-                            }
-                            for(i in pieCategories.indices){
-                                if(!pieCategories[i].equals(0f)){
-                                    pieData.add(PieEntry(pieCategories[i], labels[i]))
-                                }
-                            }
-
-                            val pieDataSet = PieDataSet(pieData, "Categories")
-                            pieDataSet.colors = (ColorTemplate.MATERIAL_COLORS.toMutableList())
-                            pieChart.data = PieData(pieDataSet)
-                            pieChart.centerText = sum.toString() + "\u20BD"
-                            pieChart.invalidate()
-                            val lineDataSet = LineDataSet(lineData,
-                                resources.getStringArray(R.array.moths)[currentDate.month])
-                            lineDataSet.color = resources.getColor(R.color.colorDeepOrange)
-                            lineChart.data = LineData(lineDataSet)
-                            lineChart.invalidate()
+                            updateCharts(p0)
                         }
                     })
             }
         }
 
         toolbarSpinner.setSelection(currentDate.month)
+    }
+
+    // update PieChart and BarChart views
+    private fun updateCharts(p0: DataSnapshot){
+        val pieData = ArrayList<PieEntry>()
+        val barData = ArrayList<BarEntry>()
+        val pieCategories = floatArrayOf(0f,0f,0f,0f,0f,0f,0f, 0f)
+        val labels = resources.getStringArray(R.array.spend_categories)
+        var sum = 0
+        for (snapshot in p0.children) {
+            Log.d("DataSnapshot stat", "Day: ${snapshot.key}")
+            for (post in snapshot.children) {
+                val transaction = post.getValue(Transaction::class.java)
+                if(transaction?.isSpend!!){
+                    pieCategories[transaction.category!!.toInt()] +=
+                        transaction.price!!.toFloat()
+                    barData.add(BarEntry(snapshot.key!!.toFloat(),
+                        transaction.price!!.toFloat()))
+                    sum += transaction.price!!.toInt()
+                }
+            }
+        }
+        for(i in pieCategories.indices){
+            if(!pieCategories[i].equals(0f)){
+                pieData.add(PieEntry(pieCategories[i], labels[i]))
+            }
+        }
+
+        val pieDataSet = PieDataSet(pieData, "Categories")
+        pieDataSet.colors = (ColorTemplate.MATERIAL_COLORS.toMutableList())
+        pieChart.data = PieData(pieDataSet)
+        pieChart.centerText = sum.toString() + "\u20BD"
+        pieChart.invalidate()
+        val barDataSet = BarDataSet(barData,
+            resources.getStringArray(R.array.moths)[currentDate.month])
+        barDataSet.color = resources.getColor(R.color.colorDeepOrange)
+        barChart.data = BarData(barDataSet)
+        barChart.invalidate()
     }
 }
