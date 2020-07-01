@@ -3,6 +3,7 @@ package dpr.svich.mywallet.views
 import android.graphics.Color
 import android.graphics.Typeface
 import android.icu.text.DateFormatSymbols
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -35,16 +36,21 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class StatisticActivity : AppCompatActivity() {
-
+class StatisticActivity : AppCompatActivity(), ChartStatFragment.OnFragmentInteractionListener,
+    ListStatFragment.OnFragmentInteractionListener {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_statistic)
 
-
+        val ft = supportFragmentManager.beginTransaction()
+        val chartFragment = ChartStatFragment()
+        ft.replace(R.id.statistic_container, chartFragment)
+        ft.commit()
     }
 
+    override fun onFragmentInteraction(uri: Uri) {
 
+    }
 }

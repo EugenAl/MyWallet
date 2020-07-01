@@ -55,10 +55,10 @@ class ChartStatFragment : Fragment() {
 
         currentDate = Date()
         // toolbar init
-        toolbar = view.findViewById(R.id.toolbar)
+        toolbar = view.findViewById(R.id.toolbar_stat_chart)
         activity!!.setActionBar(toolbar)
         toolbar.setNavigationIcon(R.drawable.arrow_back)
-        //supportActionBar!!.setDisplayShowTitleEnabled(false)
+        activity!!.actionBar.setDisplayShowTitleEnabled(false)
 
         // BarChart init
         barChart = view.findViewById(R.id.barChart)
@@ -181,7 +181,7 @@ class ChartStatFragment : Fragment() {
                         index.toString() + " -> " + labels[index],
                         Toast.LENGTH_SHORT
                     ).show()
-
+                    openCategory(index)
                 }
             }
         })
@@ -194,6 +194,18 @@ class ChartStatFragment : Fragment() {
         barDataSet.valueTextColor = Color.WHITE
         barChart.data = BarData(barDataSet)
         barChart.invalidate()
+    }
+
+    // method for open ListStatFragment
+    // use category index and selected month
+    private fun openCategory(index: Int){
+        val listFragment = ListStatFragment()
+        val bundle = Bundle()
+        bundle.putInt("index", index)
+        bundle.putInt("month", toolbarSpinner.selectedItemPosition)
+        listFragment.arguments = bundle
+        activity!!.supportFragmentManager.beginTransaction()
+            .replace(R.id.statistic_container, listFragment).commit()
     }
 
     // TODO: Rename method, update argument and hook method into UI event

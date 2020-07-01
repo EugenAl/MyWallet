@@ -7,8 +7,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".views.ChartStatFragment">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <android.widget.Toolbar
+        android:id="@+id/toolbar_stat_chart"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,7 +23,7 @@
             android:layout_marginStart="10dp"
             android:dropDownWidth="130dp"
             android:popupBackground="@color/colorPrimaryDark" />
-    </androidx.appcompat.widget.Toolbar>
+    </android.widget.Toolbar>
 
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/barChart"
@@ -36,7 +36,7 @@
         app:layout_constraintBottom_toTopOf="@+id/pieChart"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_stat_chart" />
 
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/pieChart"
