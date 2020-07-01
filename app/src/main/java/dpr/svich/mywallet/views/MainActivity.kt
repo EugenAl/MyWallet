@@ -209,6 +209,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // update main chart view
     private fun updateChart(p0: DataSnapshot, todayDate: Date){
         val chartEntries = ArrayList<BarEntry>()
         for (snapshot in p0.children) {

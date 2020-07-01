@@ -1,5 +1,7 @@
 package dpr.svich.mywallet.views
 
+import android.graphics.Color
+import android.graphics.Typeface
 import android.icu.text.DateFormatSymbols
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,11 +10,16 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -55,10 +62,33 @@ class StatisticActivity : AppCompatActivity() {
 
         // BarChart init
         barChart = findViewById(R.id.barChart)
+        barChart.setScaleEnabled(false)
+        barChart.setTouchEnabled(false)
+        barChart.description = null
+        barChart.legend.isEnabled = false
+        // BarChart axis
+        barChart.axisRight.isEnabled = false
+        val chartYAxis = barChart.getAxis(YAxis.AxisDependency.LEFT)
+        chartYAxis.setDrawGridLines(true)
+        chartYAxis.setDrawAxisLine(false)
+        chartYAxis.setDrawLabels(false)
+        val chartXAxis = barChart.xAxis
+        chartXAxis.position = XAxis.XAxisPosition.BOTTOM
+        chartXAxis.textColor = Color.WHITE
+        chartXAxis.setDrawGridLines(false)
+        chartXAxis.setDrawAxisLine(true)
 
         // PieChart init
         pieChart = findViewById(R.id.pieChart)
         pieChart.setCenterTextSize(25f)
+        pieChart.holeRadius = 80f
+        pieChart.transparentCircleRadius = 84f
+        pieChart.setCenterTextColor(resources.getColor(R.color.colorWhite))
+        pieChart.setTransparentCircleColor(resources.getColor(R.color.colorPrimary))
+        pieChart.setHoleColor(resources.getColor(R.color.colorPrimary))
+        pieChart.setEntryLabelTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL))
+        pieChart.description = null
+        pieChart.legend.isEnabled = false
 
         // spinner init
         toolbarSpinner = findViewById(R.id.month_toolbar_spinner)
@@ -104,16 +134,17 @@ class StatisticActivity : AppCompatActivity() {
         var sum = 0
         for (snapshot in p0.children) {
             Log.d("DataSnapshot stat", "Day: ${snapshot.key}")
+            var spend = 0f
             for (post in snapshot.children) {
                 val transaction = post.getValue(Transaction::class.java)
                 if(transaction?.isSpend!!){
                     pieCategories[transaction.category!!.toInt()] +=
                         transaction.price!!.toFloat()
-                    barData.add(BarEntry(snapshot.key!!.toFloat(),
-                        transaction.price!!.toFloat()))
+                    spend += transaction.price!!.toFloat()
                     sum += transaction.price!!.toInt()
                 }
             }
+            barData.add(BarEntry(snapshot.key!!.toFloat(), spend))
         }
         for(i in pieCategories.indices){
             if(!pieCategories[i].equals(0f)){
@@ -122,13 +153,26 @@ class StatisticActivity : AppCompatActivity() {
         }
 
         val pieDataSet = PieDataSet(pieData, "Categories")
-        pieDataSet.colors = (ColorTemplate.MATERIAL_COLORS.toMutableList())
+        pieDataSet.colors = (ColorTemplate.PASTEL_COLORS.toMutableList())
+        pieDataSet.valueTextColor = resources.getColor(R.color.colorWhite)
+        pieDataSet.valueTextSize = 14f
+        pieDataSet.valueTypeface = Typeface.create("sans-serif-light", Typeface.NORMAL)
         pieChart.data = PieData(pieDataSet)
         pieChart.centerText = sum.toString() + "\u20BD"
         pieChart.invalidate()
+        pieChart.setOnChartValueSelectedListener(object: OnChartValueSelectedListener{
+            override fun onNothingSelected() {
+            }
+
+            override fun onValueSelected(e: Entry?, h: Highlight?) {
+                Toast.makeText(applicationContext, (e as PieEntry).label, Toast.LENGTH_SHORT).show()
+            }
+        })
         val barDataSet = BarDataSet(barData,
             resources.getStringArray(R.array.moths)[currentDate.month])
         barDataSet.color = resources.getColor(R.color.colorDeepOrange)
+        barDataSet.axisDependency = YAxis.AxisDependency.LEFT
+        barDataSet.valueTextColor = Color.WHITE
         barChart.data = BarData(barDataSet)
         barChart.invalidate()
     }
