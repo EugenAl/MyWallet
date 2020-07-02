@@ -10,6 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toolbar
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -18,9 +21,11 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 import dpr.svich.mywallet.R
+import dpr.svich.mywallet.adapter.TransactionListAdapter
 import dpr.svich.mywallet.model.Transaction
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * A simple [Fragment] subclass.
@@ -35,6 +40,9 @@ class ListStatFragment : Fragment() {
 
     private lateinit var toolbarText: TextView
     private val TRANSACTIONS = "Transactions"
+
+    private lateinit var datasetList: ArrayList<Transaction>
+    private var adapter: TransactionListAdapter? = null
 
     val userId = FirebaseAuth.getInstance().currentUser?.uid
 
@@ -62,6 +70,15 @@ class ListStatFragment : Fragment() {
             categoryIndex = it.getInt("index")
             monthIndex = it.getInt("month")
         }
+
+        // Recycler view list of transition
+        val recycleTransactionView = view.findViewById<RecyclerView>(R.id.transaction_list_stat)
+        val recycleLayoutManager = LinearLayoutManager(context)
+        recycleTransactionView.layoutManager = recycleLayoutManager
+        recycleTransactionView.itemAnimator = DefaultItemAnimator()
+        adapter = context?.let { TransactionListAdapter(it) }
+        recycleTransactionView.adapter = adapter
+        datasetList = ArrayList()
 
         toolbarText.text =
             resources.getStringArray(R.array.moths)[monthIndex] + " · " + resources.getStringArray(R.array.spend_categories)[categoryIndex]
@@ -92,11 +109,11 @@ class ListStatFragment : Fragment() {
                 val transaction = post.getValue(Transaction::class.java)
                 transaction?.let{
                     if(it.category!!.toInt() == categoryIndex)
-                        categoryIndex
-                        //TODO add to list
+                        datasetList.add(transaction)
                 }
             }
         }
+        adapter?.setData(datasetList)
     }
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -176,11 +176,6 @@ class ChartStatFragment : Fragment() {
                 val index = labels.indexOf((e as PieEntry).label)
                 if (index >= 0) {
                     // view statistic about category in selected month
-                    Toast.makeText(
-                        context,
-                        index.toString() + " -> " + labels[index],
-                        Toast.LENGTH_SHORT
-                    ).show()
                     openCategory(index)
                 }
             }
