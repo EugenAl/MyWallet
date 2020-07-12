@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/statistic_nav_graph"
+    app:startDestination="@id/chartStatFragment">
+
+    <fragment
+        android:id="@+id/chartStatFragment"
+        android:name="dpr.svich.mywallet.views.ChartStatFragment"
+        android:label="fragment_chart_stat"
+        tools:layout="@layout/fragment_chart_stat" >
+        <action
+            android:id="@+id/action_chartStatFragment_to_listStatFragment"
+            app:destination="@id/listStatFragment"
+            app:enterAnim="@anim/fragment_fade_enter" />
+    </fragment>
+    <fragment
+        android:id="@+id/listStatFragment"
+        android:name="dpr.svich.mywallet.views.ListStatFragment"
+        android:label="fragment_list_stat"
+        tools:layout="@layout/fragment_list_stat" />
+</navigation>

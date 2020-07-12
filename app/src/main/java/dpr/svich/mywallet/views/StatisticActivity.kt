@@ -43,11 +43,6 @@ class StatisticActivity : AppCompatActivity(), ChartStatFragment.OnFragmentInter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_statistic)
-
-        val ft = supportFragmentManager.beginTransaction()
-        val chartFragment = ChartStatFragment()
-        ft.replace(R.id.statistic_container, chartFragment)
-        ft.commit()
     }
 
     override fun onFragmentInteraction(uri: Uri) {

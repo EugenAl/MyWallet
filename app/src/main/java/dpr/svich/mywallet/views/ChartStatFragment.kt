@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.navigation.fragment.findNavController
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.XAxis
@@ -193,14 +194,11 @@ class ChartStatFragment : Fragment() {
 
     // method for open ListStatFragment
     // use category index and selected month
-    private fun openCategory(index: Int){
-        val listFragment = ListStatFragment()
+    private fun openCategory(index: Int) {
         val bundle = Bundle()
         bundle.putInt("index", index)
         bundle.putInt("month", toolbarSpinner.selectedItemPosition)
-        listFragment.arguments = bundle
-        activity!!.supportFragmentManager.beginTransaction()
-            .replace(R.id.statistic_container, listFragment).commit()
+        this.findNavController().navigate(R.id.action_chartStatFragment_to_listStatFragment, bundle)
     }
 
     // TODO: Rename method, update argument and hook method into UI event
