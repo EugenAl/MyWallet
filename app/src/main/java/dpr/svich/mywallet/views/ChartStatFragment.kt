@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.navigation.fragment.findNavController
+import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.XAxis
@@ -168,6 +169,7 @@ class ChartStatFragment : Fragment() {
         pieChart.data = PieData(pieDataSet)
         pieChart.centerText = sum.toString() + "\u20BD"
         pieChart.invalidate()
+        pieChart.animateY(1000, Easing.EaseInCubic)
         pieChart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
             override fun onNothingSelected() {
             }
@@ -190,6 +192,7 @@ class ChartStatFragment : Fragment() {
         barDataSet.valueTextColor = Color.WHITE
         barChart.data = BarData(barDataSet)
         barChart.invalidate()
+        barChart.animateY( 1000, Easing.EaseInOutExpo)
     }
 
     // method for open ListStatFragment
