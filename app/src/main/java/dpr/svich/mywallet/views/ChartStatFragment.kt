@@ -192,7 +192,7 @@ class ChartStatFragment : Fragment() {
         barDataSet.valueTextColor = Color.WHITE
         barChart.data = BarData(barDataSet)
         barChart.invalidate()
-        barChart.animateY( 1000, Easing.EaseInOutExpo)
+        barChart.animateY(1000, Easing.EaseInOutExpo)
     }
 
     // method for open ListStatFragment

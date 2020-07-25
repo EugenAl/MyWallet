@@ -1,5 +1,6 @@
 package dpr.svich.mywallet.views
 
+import android.app.AlertDialog
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders.*
 
 import dpr.svich.mywallet.R
 import dpr.svich.mywallet.viewmodels.AddViewModel
@@ -76,12 +79,22 @@ class AddFragment : Fragment() {
                 }
             }
         }
+
+//        viewModel.getError().observe(this, Observer {
+//            val dialog = AlertDialog.Builder(context)
+//            dialog.setTitle("Achtung! Error")
+//            dialog.setMessage(it)
+//            dialog.setPositiveButton("Ok"){ _, _ ->
+//
+//            }
+//            dialog.show()
+//        })
         return view
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(AddViewModel::class.java)
+        viewModel = of(requireActivity()).get(AddViewModel::class.java)
         // TODO: Use the ViewModel
     }
 
