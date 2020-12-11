@@ -2,6 +2,7 @@ package dpr.svich.mywallet.views
 
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.DashPathEffect
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.CalendarContract
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
@@ -184,10 +186,10 @@ class MainActivity : AppCompatActivity() {
                         Locale.getDefault()
                     ).format(todayDate)).toInt()
 
-                    updateChart(p0, todayDate)
+                    updateChart(p0, todayDate, avg)
 
                     spendMonthTV.text = getString(R.string.month_spend, monthSpend)
-                    spendAverageTV.text = "Average spend: ${avg}\u20BD"
+                    spendAverageTV.text = getString(R.string.avg_spend, avg)
                 }
             })
 
@@ -210,7 +212,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // update main chart view
-    private fun updateChart(p0: DataSnapshot, todayDate: Date){
+    private fun updateChart(p0: DataSnapshot, todayDate: Date, avg:Int){
         val chartEntries = ArrayList<BarEntry>()
         for (snapshot in p0.children) {
             Log.d("DataSnapshot", "Day: ${snapshot.key}")
@@ -231,6 +233,11 @@ class MainActivity : AppCompatActivity() {
         chartSet.valueTextColor = Color.WHITE
         val chartData = BarData(chartSet)
         chartView.data = chartData
+        chartView.axisLeft.removeAllLimitLines()
+        var limitLine = LimitLine(avg.toFloat())
+        limitLine.lineColor = getColor(R.color.colorAccent)
+        limitLine.enableDashedLine(10f, 3f, 1f)
+        chartView.axisLeft.addLimitLine(limitLine)
         chartView.invalidate()
         chartView.animateY(500, Easing.EaseInBack)
     }

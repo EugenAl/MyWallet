@@ -6,8 +6,8 @@
     <string name="already_registered_login_me">Already registered. <u>Login me!</u></string>
     <string name="sign_in">Sign In</string>
     <string name="register">Register</string>
-    <string name="wear">Wear</string>
     <string name="month_spend">Spend this month: %d\u20BD</string>
+    <string name="avg_spend">Average spend: %d₽</string>
     <array name="spend_categories">
         <item>Transport</item>
         <item>Fuel</item>
@@ -42,4 +42,11 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="category">Category:</string>
+    <string name="add">ADD</string>
+    <string name="spend_money">Spend money</string>
+    <string name="earn_money">Earn money</string>
+    <string name="empty_price">Please, add price value</string>
+    <string name="empty_category">Please, select category</string>
+    <string name="comment">Comment</string>
 </resources>

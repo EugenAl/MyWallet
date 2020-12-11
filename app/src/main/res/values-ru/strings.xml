@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MyWallet</string>
+    <string name="email">Эл. почта</string>
+    <string name="password">Пароль</string>
+    <string name="no_account_yet_create_one">Еще нет аккаунта? <u>Создать</u></string>
+    <string name="already_registered_login_me">Аккаунт уже создан <u>Войти</u></string>
+    <string name="sign_in">Войти</string>
+    <string name="register">Регистрация</string>
+    <string name="month_spend">Потрачено за месяц: %d\u20BD</string>
+    <string name="avg_spend">В среднем за месяц: %d₽</string>
+    <array name="spend_categories">
+        <item>Транспорт</item>
+        <item>Топливо</item>
+        <item>Сладости</item>
+        <item>Товары</item>
+        <item>Развлечения</item>
+        <item>Одежда</item>
+        <item>Медикаменты</item>
+        <item>Другое</item>
+    </array>
+    <array name="earn_categories">
+        <item>Lab works</item>
+        <item>Help</item>
+        <item>Scholarship</item>
+        <item>Benefit</item>
+        <item>Other</item>
+    </array>
+    <array name="moths">
+        <item>Январь</item>
+        <item>Февраль</item>
+        <item>Март</item>
+        <item>Апрель</item>
+        <item>Май</item>
+        <item>Июнь</item>
+        <item>Июль</item>
+        <item>Август</item>
+        <item>Сентябрь</item>
+        <item>Октябрь</item>
+        <item>Ноябрь</item>
+        <item>Декабрь</item>
+    </array>
+    <string name="category">Категория:</string>
+    <string name="add">Добавить</string>
+    <string name="spend_money">Расходы</string>
+    <string name="earn_money">Доходы</string>
+    <string name="empty_price">Добавьте цену, пожалуйста</string>
+    <string name="empty_category">Выберите категорию, пожалуйста</string>
+    <string name="comment">Описание</string>
+</resources>

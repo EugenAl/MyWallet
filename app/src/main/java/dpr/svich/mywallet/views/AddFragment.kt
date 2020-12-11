@@ -10,6 +10,8 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders.*
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 
 import dpr.svich.mywallet.R
 import dpr.svich.mywallet.viewmodels.AddViewModel
@@ -23,6 +25,8 @@ class AddFragment : Fragment() {
 
     private lateinit var viewModel: AddViewModel
 
+    private var selectedPosition=-1
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -33,6 +37,20 @@ class AddFragment : Fragment() {
         val categoriesEarn = resources.getStringArray(R.array.earn_categories)
 
         // init views
+        var chipGroup = view.findViewById<ChipGroup>(R.id.chipGroup)
+        // Checked change listener for chip group
+        val onCheckedListener = CompoundButton.OnCheckedChangeListener{buttonView, isChecked ->
+            selectedPosition = if(isChecked) categoriesSpend.indexOf((buttonView as Chip).text)
+            else -1
+        }
+        for(category in categoriesSpend){
+            val chip = Chip(context)
+            chip.text = category
+            chip.isCheckable = true
+            chip.setOnCheckedChangeListener(onCheckedListener)
+            chipGroup.addView(chip)
+        }
+
         val categorySpinner = view.findViewById<Spinner>(R.id.spinner)
         if(categorySpinner != null) {
             val arrayAdapter =
@@ -65,30 +83,28 @@ class AddFragment : Fragment() {
                     }
                 }
             }
+            /* Add button handler */
             view.findViewById<Button>(R.id.addButton).also {
                 it.setOnClickListener {
-                    if (priceEditText.text.isNotEmpty()) {
+                    if (priceEditText.text.isNotEmpty() and (selectedPosition >= 0)) {
                         viewModel.addTransaction(
                             commentEditText.text.toString(),
                             priceEditText.text.toString(), spendRadioButton.isChecked,
-                            categorySpinner.selectedItemPosition
+                            selectedPosition
                         )
                         commentEditText.text.clear()
                         priceEditText.text.clear()
+                        chipGroup.clearCheck()
+                    } else if(priceEditText.text.isEmpty()){
+                        Toast.makeText(context, getString(R.string.empty_price),
+                            Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(context, getString(R.string.empty_category),
+                            Toast.LENGTH_SHORT).show()
                     }
                 }
             }
         }
-
-//        viewModel.getError().observe(this, Observer {
-//            val dialog = AlertDialog.Builder(context)
-//            dialog.setTitle("Achtung! Error")
-//            dialog.setMessage(it)
-//            dialog.setPositiveButton("Ok"){ _, _ ->
-//
-//            }
-//            dialog.show()
-//        })
         return view
     }
 

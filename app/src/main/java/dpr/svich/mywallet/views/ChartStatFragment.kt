@@ -1,6 +1,7 @@
 package dpr.svich.mywallet.views
 
 import android.content.Context
+import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.Typeface
 import android.net.Uri
@@ -11,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.findNavController
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.BarChart
@@ -30,6 +32,7 @@ import com.google.firebase.ktx.Firebase
 
 import dpr.svich.mywallet.R
 import dpr.svich.mywallet.model.Transaction
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -201,7 +204,19 @@ class ChartStatFragment : Fragment() {
         val bundle = Bundle()
         bundle.putInt("index", index)
         bundle.putInt("month", toolbarSpinner.selectedItemPosition)
-        this.findNavController().navigate(R.id.action_chartStatFragment_to_listStatFragment, bundle)
+        try {
+            this.findNavController()
+                .navigate(R.id.action_chartStatFragment_to_listStatFragment, bundle)
+        } catch (e:Exception){
+            val alertDialogBuilder = AlertDialog.Builder(context!!)
+            alertDialogBuilder.setMessage(e.message)
+            alertDialogBuilder.setPositiveButton("OK", DialogInterface.OnClickListener{
+                dialog, _ -> dialog.dismiss()
+            })
+            val dialog = alertDialogBuilder.create()
+            dialog.setTitle("Something went wrong")
+            dialog.show()
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
